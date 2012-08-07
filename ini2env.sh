@@ -65,9 +65,10 @@ BEGIN {
 	separator = "."
 	printf("declare -A %s\n", name);
 }
-/^[[:blank:]]*\[[^\]]*\][ \t#]*$/ {
+/^[[:blank:]]*\[[^\]]*\]/ {
 	sub(/^.*\[/, "")
 	sub(/\].*/, "")
+	gsub(/[\n\r]/, "")
 	section = $0
 }
 /^[[:blank:]]*[^=]+[[:blank:]]*=[[:blank:]]*.+/ {
@@ -75,8 +76,10 @@ BEGIN {
 	field = substr($0, 1, match($0, /[[:blank:]=]/) - 1)
 	sub(/^[^=]*=[[:blank:]]*/, "")
 	sub(/[[:blank:]]*$/, "")
+	gsub(/[\n\r]/, "")
+	gsub(/"/, "\\\"")
 	value = $0
-	printf("%s[\"%s%s%s\"]=%s\n", name, section, separator, field, value)
+	printf("%s[\"%s%s%s\"]=\"%s\"\n", name, section, separator, field, value)
 }
 ' > $TMPFILE
 source $TMPFILE
