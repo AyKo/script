@@ -39,7 +39,11 @@ dbname=$1
 command=$2
 param1=$3
 param2=$4
-tmpname=${dbname%/*}/tmp.$$
+if [ "${dbname}" == "${dbname%/*}" ]; then
+    tmpname=./tmp.$$
+else
+    tmpname=${dbname%/*}/tmp.$$
+fi
 
 function ShowError_KeyNotFound() {
     echo "error: '$param1' is not found in $dbname." >&1
@@ -79,7 +83,8 @@ function Add() {
     errcode=$?
     if [ $errcode -eq 1 ]; then
         trap "/bin/rm -f $tmpname" EXIT
-        /bin/cp $dbname $tmpname && echo "${param1}	${param2}"
+        /bin/cp $dbname $tmpname && echo "${param1}	${param2}" >> $tmpname
+        /bin/mv $tmpname $dbname
         errcode=$?
         if [ $errcode -ne 0 ]; then
             ShowError_General
