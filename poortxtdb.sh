@@ -46,15 +46,15 @@ else
 fi
 
 function ShowError_KeyNotFound() {
-    echo "error: '$param1' is not found in $dbname." >&1
+    echo "error: '$param1' is not found in $dbname." >&2
 }
 
 function ShowError_KeyDuplicate() {
-    echo "error: '$param1' is duplicate in $dbname." >&1
+    echo "error: '$param1' is duplicate in $dbname." >&2
 }
 
 function ShowError_General() {
-    echo "error: failure. code=$errcode" >&1
+    echo "error: failure. code=$errcode" >&2
 }
 
 function Get() {
@@ -128,7 +128,7 @@ if [ "$dbname" = "" -o "$command" = "" ]; then
     exit 1
 fi
 if [ ! -f $dbname ] && [ "$command" -ne "add" ]; then
-    echo "error: $dbname is not regular file" >&1
+    echo "error: $dbname is not regular file" >&2
     exit 1
 fi
 
@@ -137,7 +137,7 @@ case "$command" in
     "set") Set ;;
     "add") Add ;;
     "delete") Delete ;;
-    *) echo "error: $command is unrecognized command." >&1
+    *) echo "error: $command is unrecognized command." >&2
 esac
 
 # vim: ts=4 sts=4 sw=4 expandtab
